@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patterns preview</title>
+    <style>
+        body {
+            background-image: url("pattern.png");
+            background-repeat: repeat;
+            background-size: 25%;
+            /* Set default background scale to 25% */
+        }
+
+        .panel {
+            position: fixed;
+            bottom: 1rem;
+            left: 1rem;
+            width: 12rem;
+            height: 4rem;
+            background-color: rgba(241, 241, 241, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid black;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/htmx/1.9.9/htmx.min.js"
+        integrity="sha512-FSS62yxqCRMCtm1J+ddRwX8DuCRVt/WMpihCo06P+Je5AG4CV9yoLX53zHaOB5w/eZdG7d/QAyUEJTnHZHrWKg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+    <div class="panel">
+        <label for="scaleRange">Scale:</label>
+        <input type="range" min="1" max="100" value="25" id="scaleRange">
+        <label for="patternDropdown">Pattern:</label>
+        <select id="patternDropdown" hx-get="/api/patterns" hx-trigger="load" hx-swap="innerHTML"></select>
+        <!-- Options will be populated by HTMX -->
+        </select>
+    </div>
+    <script>
+        const scaleRange = document.getElementById('scaleRange');
+        scaleRange.addEventListener('input', () => {
+            const scaleValue = scaleRange.value;
+            document.body.style.backgroundSize = `${scaleValue}%`;
+        });
+
+        const patternDropdown = document.getElementById('patternDropdown');
+        patternDropdown.addEventListener('change', () => {
+            const selectedPattern = patternDropdown.value;
+            patternDropdown.addEventListener('change', () => {
+                const selectedPattern = patternDropdown.value;
+                document.body.style.backgroundImage = `url("${selectedPattern}")`;
+            });
+        });
+    </script>
+
+</body>
+
+</html>
