@@ -6,11 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patterns preview</title>
     <style>
-        body {
-            background-image: url("pattern.png");
+        #display-panel {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            right: 1rem;
+            bottom: 1rem;
             background-repeat: repeat;
             background-size: 25%;
-            /* Set default background scale to 25% */
+            border-radius: 10px;
+            border: 2px solid black;
         }
 
         .panel {
@@ -31,29 +36,75 @@
 </head>
 
 <body>
-    <div class="panel">
-        <label for="scaleRange">Scale:</label>
-        <input type="range" min="1" max="100" value="25" id="scaleRange">
-        <label for="patternDropdown">Pattern:</label>
-        <select id="patternDropdown" hx-get="/api/patterns" hx-trigger="load" hx-swap="innerHTML"></select>
-        <!-- Options will be populated by HTMX -->
-        </select>
-    </div>
-    <script>
-        const scaleRange = document.getElementById('scaleRange');
-        scaleRange.addEventListener('input', () => {
-            const scaleValue = scaleRange.value;
-            document.body.style.backgroundSize = `${scaleValue}%`;
-        });
+    <main>
+        <div id="display-panel">
 
-        const patternDropdown = document.getElementById('patternDropdown');
-        patternDropdown.addEventListener('change', () => {
-            const selectedPattern = patternDropdown.value;
+        </div>
+        <div class="panel">
+            <label for="scaleRange">Scale:</label>
+            <input type="range" min="1" max="100" value="25" id="scaleRange">
+            <label for="patternDropdown">Pattern:</label>
+            <select id="patternDropdown" hx-get="/api/patterns" hx-trigger="load" hx-swap="innerHTML"></select>
+            <!-- Options will be populated by HTMX -->
+            </select>
+        </div>
+    </main>
+
+    <script>
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const scaleRange = document.getElementById('scaleRange');
+            const patternDropdown = document.getElementById('patternDropdown');
+            const displayPanel = document.getElementById('display-panel');
+
+            scaleRange.addEventListener('input', () => {
+                const scaleValue = scaleRange.value;
+                displayPanel.style.backgroundSize = `${scaleValue}%`;
+            });
+
             patternDropdown.addEventListener('change', () => {
+                console.log('change');
                 const selectedPattern = patternDropdown.value;
-                document.body.style.backgroundImage = `url("${selectedPattern}")`;
+                patternDropdown.addEventListener('change', () => {
+                    const selectedPattern = patternDropdown.value;
+                    displayPanel.style.backgroundImage = `url("${selectedPattern}")`;
+                });
+            });
+
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'ArrowUp') {
+                    event.preventDefault();
+                    const currentIndex = patternDropdown.selectedIndex;
+                    if (currentIndex > 0) {
+                        patternDropdown.selectedIndex = currentIndex - 1;
+                        patternDropdown.dispatchEvent(new Event('change'));
+                    }
+                } else if (event.key === 'ArrowDown') {
+                    event.preventDefault();
+                    const currentIndex = patternDropdown.selectedIndex;
+                    if (currentIndex < patternDropdown.options.length - 1) {
+                        patternDropdown.selectedIndex = currentIndex + 1;
+                        patternDropdown.dispatchEvent(new Event('change'));
+                    }
+                } else if (event.key === 'ArrowLeft') {
+                    event.preventDefault();
+                    const currentValue = parseInt(scaleRange.value);
+                    if (currentValue > 1) {
+                        scaleRange.value = currentValue - 1;
+                        scaleRange.dispatchEvent(new Event('input'));
+                    }
+                } else if (event.key === 'ArrowRight') {
+                    event.preventDefault();
+                    const currentValue = parseInt(scaleRange.value);
+                    if (currentValue < 100) {
+                        scaleRange.value = currentValue + 1;
+                        scaleRange.dispatchEvent(new Event('input'));
+                    }
+                }
             });
         });
+
     </script>
 
 </body>

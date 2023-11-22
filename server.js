@@ -6,7 +6,12 @@ const express = require('express'); // Add this line
 const app = express(); // Add this line
 
 // Serve static files from the "patterns" directory
-app.use(express.static(path.join(__dirname, 'patterns'))); // Add this line
+
+const patternsDir = process.argv[2] || path.join(__dirname, 'patterns');
+
+console.log(`Serving patterns from ${patternsDir}`);
+
+app.use(express.static(patternsDir)); // Add this line
 
 app.get('/', (req, res) => {
   // Set the content type to HTML
@@ -28,8 +33,6 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/patterns', (req, res) => {
-  const patternsDir = path.join(__dirname, 'patterns');
-
   fs.readdir(patternsDir, (err, files) => {
     if (err) {
       res.status(500).send('Unable to read patterns directory');
