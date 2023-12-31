@@ -21,26 +21,24 @@
 
         .panel {
             position: fixed;
-            bottom: 1rem;
-            left: 1rem;
+            bottom: 2rem;
+            left: 2rem;
             width: 18rem;
-            height: 12rem;
+            height: 11rem;
             background-color: rgba(31, 31, 31, 0.8);
             padding: 20px;
             border-radius: 10px;
             border: 2px solid black;
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/htmx/1.9.9/htmx.min.js"
-        integrity="sha512-FSS62yxqCRMCtm1J+ddRwX8DuCRVt/WMpihCo06P+Je5AG4CV9yoLX53zHaOB5w/eZdG7d/QAyUEJTnHZHrWKg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 </head>
 
 <body>
     <main>
         <div id="display-panel">
-
         </div>
+
         <div class="panel">
             <label for="scaleRange">Scale:</label>
             <input type="range" min="1" max="100" value="25" id="scaleRange">
@@ -50,11 +48,11 @@
             </select>
         </div>
     </main>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/htmx/1.9.9/htmx.min.js"
+        integrity="sha512-FSS62yxqCRMCtm1J+ddRwX8DuCRVt/WMpihCo06P+Je5AG4CV9yoLX53zHaOB5w/eZdG7d/QAyUEJTnHZHrWKg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-
-
-        document.addEventListener('DOMContentLoaded', function () {
+        function ready() {
             const scaleRange = document.getElementById('scaleRange');
             const patternDropdown = document.getElementById('patternDropdown');
             const displayPanel = document.getElementById('display-panel');
@@ -65,12 +63,8 @@
             });
 
             patternDropdown.addEventListener('change', () => {
-                console.log('change');
                 const selectedPattern = patternDropdown.value;
-                patternDropdown.addEventListener('change', () => {
-                    const selectedPattern = patternDropdown.value;
-                    displayPanel.style.backgroundImage = `url("${selectedPattern}")`;
-                });
+                displayPanel.style.backgroundImage = `url("${selectedPattern}")`;
             });
 
             document.addEventListener('keydown', (event) => {
@@ -104,8 +98,8 @@
                     }
                 }
             });
-        });
-
+        }
+        document.addEventListener('DOMContentLoaded', ready);
     </script>
 
 </body>
